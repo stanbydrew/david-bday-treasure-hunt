@@ -40,8 +40,10 @@
   <!-- ============ ECRAN NIVEL (populat din JS) ============ -->
   <section class="screen" id="screen-level" hidden>
     <div class="progress" id="progress">
-      <span class="progress-label" id="progress-label"></span>
-      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      <div class="progress-track" id="progress-track" role="progressbar"
+           aria-label="Progres în traseu" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
     </div>
 
     <div class="card">

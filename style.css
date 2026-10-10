@@ -128,15 +128,6 @@ body {
 /* ---------- Nivel ---------- */
 .progress { margin-bottom: 14px; }
 
-.progress-label {
-  display: block;
-  font-size: 0.76rem;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: var(--yellow-dim);
-  margin-bottom: 6px;
-}
-
 .progress-track {
   height: 5px;
   background: rgba(255, 201, 60, 0.15);

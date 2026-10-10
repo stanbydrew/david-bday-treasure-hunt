@@ -402,10 +402,17 @@
   function renderLevel() {
     var lvl = LEVELS[state.level];
 
-    $('progress-label').textContent =
-      'Locația ' + (state.level + 1) + ' din ' + LEVELS.length;
     $('progress-fill').style.width =
       (state.level / LEVELS.length) * 100 + '%';
+
+    // Bara nu mai are text, deci ținem informația doar pentru cititoarele de ecran.
+    var track = $('progress-track');
+    track.setAttribute('aria-valuemax', String(LEVELS.length));
+    track.setAttribute('aria-valuenow', String(state.level));
+    track.setAttribute(
+      'aria-valuetext',
+      'Locația ' + (state.level + 1) + ' din ' + LEVELS.length
+    );
 
     var intro = $('level-intro');
     intro.textContent = lvl.intro || '';
