@@ -125,7 +125,6 @@
       photo: 'assets/location1.jpeg',
       video: 'assets/location1.mp4',
       rewardIntro:
-        'Ghicitoare cadou\n' +
         'Pentru a revendica primul reward va trebui să introduci mai jos un cod pe patru roți.',
       riddles: [
         {
@@ -151,7 +150,6 @@
       photo: 'assets/location2.jpeg',
       video: 'assets/location2.mp4',
       rewardIntro:
-        'Ghicitoare cadou\n' +
         'Pentru a revendica următorul reward scrie mai jos răspunsul pentru următoarea ghicitoare.',
       riddles: [
         {
@@ -177,7 +175,6 @@
       photo: 'assets/location3.jpeg',
       video: 'assets/location3.mp4',
       rewardIntro:
-        'Ghicitoare cadou\n' +
         'Pentru a primi următoarea recompensă scrie mai jos răspunsul pentru următoarele 2 ghicitori.',
       riddles: [
         {
@@ -217,7 +214,6 @@
       photo: 'assets/location4.jpeg',
       video: 'assets/location4.mp4',
       rewardIntro:
-        'Ghicitoare cadou\n' +
         'Mno, aici ai de gândit puțin mai mult ca să poți primi următoarea recompensă.',
       riddles: [
         {
@@ -258,8 +254,7 @@
         'aici se trage cu lasere.',
       photo: 'assets/location5.jpeg',
       video: 'assets/location5.mp4',
-      rewardIntro:
-        'Ghicitoare cadou\nLa ghicitoarea asta ar fi bine să știi răspunsul 😂.',
+      rewardIntro: 'La ghicitoarea asta ar fi bine să știi răspunsul 😂.',
       riddles: [
         {
           q: 'Îl trimiți când n-ai ce să zici,\nȘi râzi cu lacrimi, deși-i cringe.',
@@ -416,7 +411,6 @@
     intro.textContent = lvl.intro || '';
     intro.hidden = !lvl.intro;
 
-    $('level-title').textContent = lvl.title;
     $('level-clue').textContent = lvl.clue;
 
     setPhoto(lvl.photo, 'Poză pentru ' + lvl.title);

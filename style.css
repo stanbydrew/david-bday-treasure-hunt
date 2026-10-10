@@ -158,14 +158,8 @@ body {
   white-space: pre-line;
 }
 
-.level-title {
-  margin: 18px 0 10px;
-  font-size: 1.5rem;
-  color: var(--yellow-bright);
-  letter-spacing: -0.01em;
-}
-
 .clue {
+  margin-top: 16px;
   white-space: pre-line;
   font-size: 1.05rem;
 }

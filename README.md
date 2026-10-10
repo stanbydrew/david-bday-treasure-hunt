@@ -40,14 +40,6 @@ Pornește `npx serve .` pe PC, află IP-ul local al PC-ului și deschide pe tele
 - **Verificarea e iertătoare**: ignoră majuscule, spații, diacritice și cratime;
   `7,5` și `7.5` sunt amândouă corecte.
 
-## Ce mai trebuie completat
-
-În `index.html`, înlocuiește linkul placeholder de pe ecranul final:
-
-```html
-<a ... href="#INLOCUIESTE_CU_LINKUL_CYPHER">Cypher</a>
-```
-
 ## Cum schimbi un răspuns
 
 Răspunsurile sunt hash-uite, deci nu le poți edita direct. Generează hash-ul nou:
