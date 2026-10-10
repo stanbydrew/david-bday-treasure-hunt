@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0a">
+<title>Vânătoarea de comori — La mulți ani, David!</title>
+<link rel="stylesheet" href="style.css">
+<link rel="preload" as="image" href="assets/davidBdayBackgrounad.jpg">
+</head>
+<body>
+
+<div class="bg" aria-hidden="true"></div>
+<canvas id="confetti" class="confetti" aria-hidden="true" hidden></canvas>
+
+<main id="app">
+
+  <!-- ============ ECRAN DE START ============ -->
+  <section class="screen" id="screen-welcome">
+    <div class="card">
+      <p class="eyebrow">Bine ai venit</p>
+      <h1 class="title">Mr. Boombastic</h1>
+      <p class="aka">aka David Beckham · aka David · aka Groza · aka Bă</p>
+
+      <p class="lead">Ești pregătit pentru următoarea ta aventură?</p>
+      <p class="whisper">tu crezi că ești pregătit, da' nu-i chiar așa ușor, te anunț de pe acum</p>
+
+      <hr class="rule">
+
+      <p>Urmează să treci prin diferite joculețe, iar la finalizarea fiecărui joculeț vei fi răsplătit pe cinste.</p>
+      <p class="worth">It's all worth it!</p>
+
+      <p class="muted">Pentru a începe distracția apasă pe butonul de mai jos</p>
+
+      <button class="btn btn-big" id="btn-start" type="button">LEHGO!</button>
+    </div>
+  </section>
+
+  <!-- ============ ECRAN NIVEL (populat din JS) ============ -->
+  <section class="screen" id="screen-level" hidden>
+    <div class="progress" id="progress">
+      <span class="progress-label" id="progress-label"></span>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+
+    <div class="card">
+      <p class="level-intro" id="level-intro"></p>
+
+      <h2 class="level-title" id="level-title"></h2>
+      <p class="clue" id="level-clue"></p>
+
+      <div class="media">
+        <img class="photo" id="level-photo" alt="Indiciu foto pentru locație" loading="lazy">
+        <div class="video-wrap">
+          <video id="level-video" controls preload="none" playsinline webkit-playsinline
+                 controlslist="nodownload" disablepictureinpicture></video>
+        </div>
+      </div>
+
+      <hr class="rule">
+
+      <p class="reward-intro" id="reward-intro"></p>
+
+      <div id="riddles"></div>
+
+      <div class="unlocked" id="unlocked" hidden>
+        <p class="unlocked-msg">🎉 Recompensă deblocată!</p>
+        <button class="btn" id="btn-next" type="button"></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ECRAN FINAL ============ -->
+  <section class="screen" id="screen-final" hidden>
+    <div class="card card-final">
+      <h1 class="enjoy">ENJOY!</h1>
+      <p class="lead">Ai terminat traseul, campionule. 🏆</p>
+      <!-- TODO: înlocuiește href-ul de mai jos cu linkul real Cypher -->
+      <a class="btn btn-big" id="link-cypher" href="#INLOCUIESTE_CU_LINKUL_CYPHER"
+         target="_blank" rel="noopener">Cypher</a>
+      <p class="muted small">La mulți ani! 🥳</p>
+      <p class="credit">Dezvoltat de Varu' Andrei folosind inteligența artificială</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <button class="btn-reset" id="btn-reset" type="button">resetează progresul</button>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
