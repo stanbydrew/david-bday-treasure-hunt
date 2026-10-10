@@ -7,6 +7,7 @@
 <title>Vânătoarea de comori — La mulți ani, David!</title>
 <link rel="stylesheet" href="style.css">
 <link rel="preload" as="image" href="assets/davidBdayBackgrounad.jpg">
+<link rel="preload" as="image" href="assets/location1.jpeg">
 </head>
 <body>
 
@@ -50,7 +51,9 @@
       <p class="clue" id="level-clue"></p>
 
       <div class="media">
-        <img class="photo" id="level-photo" alt="Indiciu foto pentru locație" loading="lazy">
+        <div class="photo-frame" id="photo-frame">
+          <img class="photo" id="level-photo" alt="Indiciu foto pentru locație" decoding="async">
+        </div>
         <div class="video-wrap">
           <video id="level-video" controls preload="none" playsinline webkit-playsinline
                  controlslist="nodownload" disablepictureinpicture></video>

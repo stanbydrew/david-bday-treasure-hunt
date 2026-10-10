@@ -359,6 +359,50 @@
     scrollToTop();
   }
 
+  /* ---------- Poze ----------
+     Nu punem src-ul nou direct pe <img>, pentru că browserul ține
+     poza veche afișată până se încarcă cea nouă. Încărcăm întâi în
+     memorie și abia apoi schimbăm, cu un fade. */
+  var pendingPhoto = null;
+
+  function setPhoto(src, alt) {
+    var photo = $('level-photo');
+    var frame = $('photo-frame');
+
+    frame.classList.remove('is-ready');
+
+    // Dacă o încărcare anterioară e încă în curs, o abandonăm.
+    if (pendingPhoto) {
+      pendingPhoto.onload = null;
+      pendingPhoto.onerror = null;
+    }
+
+    var loader = new Image();
+    pendingPhoto = loader;
+
+    function done() {
+      if (pendingPhoto !== loader) return; // între timp s-a schimbat nivelul
+      photo.src = src;
+      photo.alt = alt;
+      frame.classList.add('is-ready');
+      pendingPhoto = null;
+    }
+
+    loader.onload = done;
+    loader.onerror = done; // tot o arătăm, ca să nu rămână ecranul gol
+    loader.src = src;
+
+    if (loader.complete) done(); // deja în cache
+  }
+
+  /* Trage în cache poza nivelului următor cât timp jucătorul merge spre
+     locație, ca trecerea mai departe să fie instantanee. */
+  function preloadPhoto(index) {
+    if (index < 0 || index >= LEVELS.length) return;
+    var img = new Image();
+    img.src = LEVELS[index].photo;
+  }
+
   /* ---------- Randare nivel ---------- */
   function renderLevel() {
     var lvl = LEVELS[state.level];
@@ -375,9 +419,7 @@
     $('level-title').textContent = lvl.title;
     $('level-clue').textContent = lvl.clue;
 
-    var photo = $('level-photo');
-    photo.src = lvl.photo;
-    photo.alt = 'Poză pentru ' + lvl.title;
+    setPhoto(lvl.photo, 'Poză pentru ' + lvl.title);
 
     // Reîncărcăm video-ul de la zero pentru noul nivel.
     var video = $('level-video');
@@ -401,6 +443,7 @@
 
     checkLevelComplete();
     scrollToTop();
+    preloadPhoto(state.level + 1);
   }
 
   /* Construiește casetele de tip PIN: N căsuțe de un caracter, cu

@@ -173,19 +173,73 @@ body {
 /* ---------- Media ---------- */
 .media { margin: 18px 0 4px; }
 
-.photo,
+/* Rama păstrează locul pozei dinainte să se încarce, ca să nu sară
+   layout-ul. Toate pozele sunt 900x1600, deci 9/16 e exact. */
+.photo-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--panel-line);
+  background: #0d0d0d;
+  overflow: hidden;
+}
+
+/* Schelet care pulsează cât se încarcă poza. */
+.photo-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    rgba(255, 201, 60, 0.03) 30%,
+    rgba(255, 201, 60, 0.13) 50%,
+    rgba(255, 201, 60, 0.03) 70%
+  );
+  background-size: 220% 100%;
+  animation: shimmer 1.3s linear infinite;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.photo-frame.is-ready::after {
+  opacity: 0;
+  animation: none;
+}
+
+@keyframes shimmer {
+  from { background-position: 220% 0; }
+  to   { background-position: -220% 0; }
+}
+
+.photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  /* Fără tranziție aici: poza veche trebuie să dispară INSTANT când
+     trecem la alt nivel, altfel se vede cum se stinge încet. */
+  transition: none;
+}
+
+/* Tranziția e doar la apariție, pe poza nouă. */
+.photo-frame.is-ready .photo {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
 .video-wrap video {
   display: block;
   width: 100%;
-  height: auto;
+  aspect-ratio: 9 / 16;
+  max-height: 70vh;
+  object-fit: contain;
   border-radius: 10px;
   border: 1px solid var(--panel-line);
   background: #000;
 }
-
-.photo { margin-bottom: 12px; }
-
-.video-wrap video { max-height: 70vh; }
 
 /* ---------- Ghicitori ---------- */
 .reward-intro {
@@ -462,6 +516,8 @@ body {
   .screen:not([hidden]) { animation: none; }
   .progress-fill { transition: none; }
   .credit { animation: none; color: var(--yellow-bright); }
+  .photo-frame::after { animation: none; }
+  .photo { transition: none; }
 }
 
 /* ---------- Ecrane mai mari ---------- */
