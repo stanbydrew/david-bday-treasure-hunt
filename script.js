@@ -604,6 +604,7 @@
     hintBtn.addEventListener('click', function () {
       hintText.hidden = false;
       hintBtn.hidden = true;
+      sound.hint();
     });
 
     hintRow.appendChild(hintBtn);
@@ -624,6 +625,7 @@
         if (input) input.disabled = true;
         feedback.className = 'feedback ok';
         feedback.textContent = '✓ Corect!';
+        sound.correct();
       } else {
         // Reluat din progresul salvat — nu știm ce a scris, ascundem câmpul.
         row.hidden = true;
@@ -659,6 +661,7 @@
         feedback.className = 'feedback bad';
         feedback.textContent =
           WRONG_MSGS[Math.floor(Math.random() * WRONG_MSGS.length)];
+        sound.wrong();
       }
     }
 
@@ -707,6 +710,144 @@
       }
     }, 180);
   }
+
+  /* ---------- Sunete ----------
+     Totul e sintetizat cu Web Audio, deci nu descărcăm niciun fișier.
+     Browserele blochează sunetul până la prima atingere a ecranului, așa
+     că AudioContext-ul se creează abia la primul click (butonul LEHGO). */
+  var sound = (function () {
+    var SOUND_KEY = 'david-hunt-sound';
+    var ctx = null;
+    var master = null;
+    var enabled = true;
+
+    try {
+      enabled = localStorage.getItem(SOUND_KEY) !== 'off';
+    } catch (e) { /* rămâne pornit */ }
+
+    function ensure() {
+      if (!enabled) return null;
+
+      if (!ctx) {
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return null;
+        try {
+          ctx = new AC();
+          master = ctx.createGain();
+          master.gain.value = 0.5; // puțin cap, să nu sune strident
+          master.connect(ctx.destination);
+        } catch (e) {
+          ctx = null;
+          return null;
+        }
+      }
+
+      // Pe telefon contextul pornește suspendat până la o interacțiune.
+      if (ctx.state === 'suspended' && ctx.resume) {
+        try { ctx.resume(); } catch (e) { /* ignorăm */ }
+      }
+      return ctx;
+    }
+
+    /* O singură notă: atac scurt, apoi stingere. */
+    function tone(freq, delay, duration, type, peak) {
+      var c = ensure();
+      if (!c) return;
+
+      try {
+        var t0 = c.currentTime + delay;
+        var osc = c.createOscillator();
+        var gain = c.createGain();
+
+        osc.type = type || 'triangle';
+        osc.frequency.setValueAtTime(freq, t0);
+
+        gain.gain.setValueAtTime(0.0001, t0);
+        gain.gain.linearRampToValueAtTime(peak, t0 + 0.012);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t0 + duration);
+
+        osc.connect(gain);
+        gain.connect(master);
+        osc.start(t0);
+        osc.stop(t0 + duration + 0.03);
+      } catch (e) { /* dacă audio nu merge, jocul continuă în liniște */ }
+    }
+
+    /* Notă care alunecă în jos — pentru răspuns greșit. */
+    function slide(from, to, delay, duration, peak) {
+      var c = ensure();
+      if (!c) return;
+
+      try {
+        var t0 = c.currentTime + delay;
+        var osc = c.createOscillator();
+        var gain = c.createGain();
+
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(from, t0);
+        osc.frequency.exponentialRampToValueAtTime(to, t0 + duration);
+
+        gain.gain.setValueAtTime(0.0001, t0);
+        gain.gain.linearRampToValueAtTime(peak, t0 + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t0 + duration);
+
+        osc.connect(gain);
+        gain.connect(master);
+        osc.start(t0);
+        osc.stop(t0 + duration + 0.03);
+      } catch (e) { /* ignorăm */ }
+    }
+
+    return {
+      /* La LEHGO — deschide și contextul audio, fiind un click real. */
+      start: function () {
+        tone(392.00, 0.00, 0.14, 'triangle', 0.16); // G4
+        tone(587.33, 0.09, 0.22, 'triangle', 0.18); // D5
+      },
+
+      /* Răspuns corect: arpegiu major urcător. */
+      correct: function () {
+        tone(523.25, 0.00, 0.26, 'triangle', 0.20); // C5
+        tone(659.25, 0.08, 0.26, 'triangle', 0.20); // E5
+        tone(783.99, 0.16, 0.38, 'triangle', 0.22); // G5
+      },
+
+      /* Răspuns greșit: bâzâit scurt care coboară. */
+      wrong: function () {
+        slide(196.00, 110.00, 0, 0.28, 0.11); // G3 -> A2
+      },
+
+      /* Hint dezvăluit: un blip discret. */
+      hint: function () {
+        tone(880.00, 0, 0.12, 'sine', 0.12); // A5
+      },
+
+      /* Finalul traseului: fanfară. */
+      win: function () {
+        var notes = [523.25, 659.25, 783.99, 1046.50]; // C5 E5 G5 C6
+        notes.forEach(function (f, i) {
+          tone(f, i * 0.13, 0.42, 'triangle', 0.22);
+        });
+        // acordul final, ținut mai mult
+        tone(523.25, 0.60, 0.95, 'triangle', 0.16);
+        tone(659.25, 0.60, 0.95, 'triangle', 0.14);
+        tone(1046.50, 0.60, 1.05, 'triangle', 0.14);
+      },
+
+      isEnabled: function () { return enabled; },
+
+      toggle: function () {
+        enabled = !enabled;
+        try {
+          localStorage.setItem(SOUND_KEY, enabled ? 'on' : 'off');
+        } catch (e) { /* ignorăm */ }
+        if (enabled) {
+          tone(659.25, 0, 0.16, 'triangle', 0.18); // confirmare scurtă
+        }
+        return enabled;
+      }
+    };
+  })();
 
   /* ---------- Confetti ----------
      Canvas simplu, fără biblioteci. Pornește la ecranul final. */
@@ -822,6 +963,7 @@
   function startGame() {
     state.started = true;
     save();
+    sound.start();
     show('level');
     renderLevel();
   }
@@ -834,6 +976,7 @@
       save();
       show('final');
       confetti.start(5000);
+      sound.win();
       return;
     }
 
@@ -860,6 +1003,22 @@
   $('btn-start').addEventListener('click', startGame);
   $('btn-next').addEventListener('click', nextLevel);
   $('btn-reset').addEventListener('click', resetProgress);
+
+  var soundBtn = $('btn-sound');
+
+  function renderSoundBtn() {
+    var on = sound.isEnabled();
+    soundBtn.textContent = on ? '🔊 sunet' : '🔇 sunet';
+    soundBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    soundBtn.classList.toggle('is-off', !on);
+  }
+
+  soundBtn.addEventListener('click', function () {
+    sound.toggle();
+    renderSoundBtn();
+  });
+
+  renderSoundBtn();
 
   load();
 

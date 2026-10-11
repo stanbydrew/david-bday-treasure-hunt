@@ -487,6 +487,27 @@ body {
   padding: 10px;
 }
 
+.btn-sound {
+  display: block;
+  margin: 0 auto 6px;
+  min-height: 42px;
+  padding: 0 16px;
+  font: inherit;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  color: var(--yellow);
+  background: transparent;
+  border: 1px solid var(--panel-line);
+  border-radius: 99px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-sound.is-off {
+  color: #6d6450;
+  border-color: rgba(255, 201, 60, 0.14);
+}
+
 /* ---------- Animație la intrare ---------- */
 .screen:not([hidden]) {
   animation: rise 0.35s ease both;
