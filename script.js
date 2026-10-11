@@ -428,6 +428,12 @@
     video.removeAttribute('src');
     video.setAttribute('src', lvl.video);
     video.setAttribute('poster', lvl.photo);
+
+    // Doar location3.mp4 are pistă audio, restul nu. Le ținem pe toate
+    // mute, ca sunetul să fie la fel peste tot.
+    video.defaultMuted = true;
+    video.muted = true;
+
     video.load();
 
     $('reward-intro').textContent = lvl.rewardIntro;
